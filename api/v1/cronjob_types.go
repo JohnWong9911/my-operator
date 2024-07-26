@@ -6,6 +6,11 @@ import (
 
 // CronJobSpec defines the desired state of CronJob
 type CronJobSpec struct {
+	// ContainerName is the name of the container
+	ContainerName string `json:"containerName"`
+
+	// Image is the container image to run
+	Image string `json:"image"`
 	// Schedule is the cron schedule
 	Schedule string `json:"schedule"`
 
