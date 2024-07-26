@@ -6,7 +6,19 @@ metadata:
   name: manager-role
 rules:
 - apiGroups:
-  - batch.my.domain
+  - batch
+  resources:
+  - jobs
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - batch.example.com
   resources:
   - cronjobs
   verbs:
@@ -18,13 +30,13 @@ rules:
   - update
   - watch
 - apiGroups:
-  - batch.my.domain
+  - batch.example.com
   resources:
   - cronjobs/finalizers
   verbs:
   - update
 - apiGroups:
-  - batch.my.domain
+  - batch.example.com
   resources:
   - cronjobs/status
   verbs:

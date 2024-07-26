@@ -35,10 +35,17 @@ spec:
           spec:
             description: CronJobSpec defines the desired state of CronJob
             properties:
-              foo:
-                description: Foo is an example field of CronJob. Edit cronjob_types.go
-                  to remove/update
+              command:
+                description: Command to run
+                items:
+                  type: string
+                type: array
+              schedule:
+                description: Schedule is the cron schedule
                 type: string
+            required:
+            - command
+            - schedule
             type: object
           status:
             description: CronJobStatus defines the observed state of CronJob

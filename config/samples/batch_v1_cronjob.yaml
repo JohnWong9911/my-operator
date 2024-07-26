@@ -8,5 +8,10 @@ metadata:
     app.kubernetes.io/managed-by: kustomize
     app.kubernetes.io/created-by: my-operator
   name: cronjob-sample
+  namespace: default
 spec:
-  # TODO(user): Add fields here
+  schedule: "*/2 * * * *"
+  command:
+    - /bin/sh
+    - -c
+    - date; echo Hello from the Kubernetes CronJob
