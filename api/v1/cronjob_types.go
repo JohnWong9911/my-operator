@@ -1,41 +1,17 @@
-/*
-Copyright 2024.
-
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-*/
-
 package v1
 
 import (
-	batchv1 "k8s.io/api/batch/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-// EDIT THIS FILE!  THIS IS SCAFFOLDING FOR YOU TO OWN!
-// NOTE: json tags are required.  Any new fields you add must have json tags for the fields to be serialized.
-
 // CronJobSpec defines the desired state of CronJob
 type CronJobSpec struct {
-	// INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
-	// Important: Run "make" to regenerate code after modifying this file
-
 	// Foo is an example field of CronJob. Edit cronjob_types.go to remove/update
 	Foo string `json:"foo,omitempty"`
 	// Schedule is the cron schedule
 	Schedule string `json:"schedule"`
-
 	// JobTemplate is the template for the job
-	JobTemplate batchv1.JobSpec `json:"jobTemplate"`
+	JobTemplate JobTemplateSpec `json:"jobTemplate"`
 }
 
 // JobTemplateSpec describes the data a Job should have when created from a template
@@ -55,11 +31,12 @@ type PodTemplateSpec struct {
 
 // PodSpec is a description of a pod
 type PodSpec struct {
-	Containers    []Container `json:"containers"`
-	RestartPolicy string      `json:"restartPolicy"`
+	Containers []Container `json:"containers"`
+	// +optional
+	RestartPolicy string `json:"restartPolicy,omitempty"`
 }
 
-// Container represents a single container that is expected to be run on the host
+// Container represents a single container
 type Container struct {
 	Name  string   `json:"name"`
 	Image string   `json:"image"`
