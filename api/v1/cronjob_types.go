@@ -6,10 +6,9 @@ import (
 
 // CronJobSpec defines the desired state of CronJob
 type CronJobSpec struct {
-	// Foo is an example field of CronJob. Edit cronjob_types.go to remove/update
-	Foo string `json:"foo,omitempty"`
 	// Schedule is the cron schedule
 	Schedule string `json:"schedule"`
+
 	// JobTemplate is the template for the job
 	JobTemplate JobTemplateSpec `json:"jobTemplate"`
 }
@@ -31,9 +30,8 @@ type PodTemplateSpec struct {
 
 // PodSpec is a description of a pod
 type PodSpec struct {
-	Containers []Container `json:"containers"`
-	// +optional
-	RestartPolicy string `json:"restartPolicy,omitempty"`
+	Containers    []Container `json:"containers"`
+	RestartPolicy string      `json:"restartPolicy"`
 }
 
 // Container represents a single container
@@ -45,8 +43,7 @@ type Container struct {
 
 // CronJobStatus defines the observed state of CronJob
 type CronJobStatus struct {
-	// INSERT ADDITIONAL STATUS FIELD - define observed state of cluster
-	// Important: Run "make" to regenerate code after modifying this file
+	// Add status fields here
 }
 
 //+kubebuilder:object:root=true
