@@ -30,8 +30,13 @@ type CronJobReconciler struct {
 //+kubebuilder:rbac:groups=batch,resources=jobs,verbs=get;list;watch;create;update;patch;delete
 
 func (r *CronJobReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
-	log := r.Log.WithValues("cronjob", req.NamespacedName)
+	// Check if the logger is nil
+	if r.Log.GetSink() == nil {
+		r.Log = ctrl.Log.WithName("controllers").WithName("CronJob")
+	}
 
+	log := r.Log.WithValues("cronjob", req.NamespacedName)
+	log.Info("Reconciling CronJob")
 	// Fetch the CronJob instance
 	cronJob := &batchv1alpha1.CronJob{}
 	err := r.Get(ctx, req.NamespacedName, cronJob)
