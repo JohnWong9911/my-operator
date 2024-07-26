@@ -17,6 +17,7 @@ limitations under the License.
 package v1
 
 import (
+	batchv1 "k8s.io/api/batch/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -30,6 +31,39 @@ type CronJobSpec struct {
 
 	// Foo is an example field of CronJob. Edit cronjob_types.go to remove/update
 	Foo string `json:"foo,omitempty"`
+	// Schedule is the cron schedule
+	Schedule string `json:"schedule"`
+
+	// JobTemplate is the template for the job
+	JobTemplate batchv1.JobSpec `json:"jobTemplate"`
+}
+
+// JobTemplateSpec describes the data a Job should have when created from a template
+type JobTemplateSpec struct {
+	Spec JobSpec `json:"spec"`
+}
+
+// JobSpec describes how the job execution will look like
+type JobSpec struct {
+	Template PodTemplateSpec `json:"template"`
+}
+
+// PodTemplateSpec describes the data a pod should have when created from a template
+type PodTemplateSpec struct {
+	Spec PodSpec `json:"spec"`
+}
+
+// PodSpec is a description of a pod
+type PodSpec struct {
+	Containers    []Container `json:"containers"`
+	RestartPolicy string      `json:"restartPolicy"`
+}
+
+// Container represents a single container that is expected to be run on the host
+type Container struct {
+	Name  string   `json:"name"`
+	Image string   `json:"image"`
+	Args  []string `json:"args"`
 }
 
 // CronJobStatus defines the observed state of CronJob
