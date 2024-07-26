@@ -35,16 +35,10 @@ spec:
           spec:
             description: CronJobSpec defines the desired state of CronJob
             properties:
-              command:
-                description: Command to run
-                items:
-                  type: string
-                type: array
               schedule:
                 description: Schedule is the cron schedule
                 type: string
             required:
-            - command
             - schedule
             type: object
           status:

@@ -1,17 +1,8 @@
 apiVersion: batch.example.com/v1
 kind: CronJob
 metadata:
-  labels:
-    app.kubernetes.io/name: cronjob
-    app.kubernetes.io/instance: cronjob-sample
-    app.kubernetes.io/part-of: my-operator
-    app.kubernetes.io/managed-by: kustomize
-    app.kubernetes.io/created-by: my-operator
   name: cronjob-sample
   namespace: default
 spec:
   schedule: "*/2 * * * *"
-  command:
-    - /bin/sh
-    - -c
-    - date; echo Hello from the Kubernetes CronJob
+

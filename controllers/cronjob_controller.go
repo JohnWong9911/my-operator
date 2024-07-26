@@ -2,9 +2,11 @@ package controllers
 
 import (
 	"context"
+	"fmt"
 
 	batchv1alpha1 "github.com/JohnWong9911/my-operator/api/v1"
 	"github.com/go-logr/logr"
+	"github.com/robfig/cron/v3"
 	batchv1core "k8s.io/api/batch/v1"
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/errors"
@@ -45,6 +47,12 @@ func (r *CronJobReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ct
 		return ctrl.Result{}, err
 	}
 
+	// Validate the cron schedule
+	if err := validateCronSchedule(cronJob.Spec.Schedule); err != nil {
+		log.Error(err, "Invalid cron schedule", "schedule", cronJob.Spec.Schedule)
+		return ctrl.Result{}, nil
+	}
+
 	// Define the job from the cronjob's spec
 	job := &batchv1core.Job{
 		ObjectMeta: metav1.ObjectMeta{
@@ -63,7 +71,7 @@ func (r *CronJobReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ct
 						{
 							Name:    "cronjob-container",
 							Image:   "busybox",
-							Command: cronJob.Spec.Command,
+							Command: []string{"/bin/sh", "-c", "date; echo Hello from the Kubernetes CronJob"},
 						},
 					},
 					RestartPolicy: corev1.RestartPolicyOnFailure,
@@ -74,6 +82,7 @@ func (r *CronJobReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ct
 
 	// Set the cronjob instance as the owner and controller
 	if err := ctrl.SetControllerReference(cronJob, job, r.Scheme); err != nil {
+		log.Error(err, "Failed to set controller reference")
 		return ctrl.Result{}, err
 	}
 
@@ -97,6 +106,14 @@ func (r *CronJobReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ct
 	// Job already exists - don't requeue
 	log.Info("Skip reconcile: Job already exists", "Job.Namespace", found.Namespace, "Job.Name", found.Name)
 	return ctrl.Result{}, nil
+}
+
+func validateCronSchedule(schedule string) error {
+	_, err := cron.ParseStandard(schedule)
+	if err != nil {
+		return fmt.Errorf("invalid cron schedule: %w", err)
+	}
+	return nil
 }
 
 func (r *CronJobReconciler) SetupWithManager(mgr ctrl.Manager) error {
